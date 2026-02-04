@@ -50,7 +50,7 @@ export default function Home() {
             lineHeight="1.7"
             color="gray.700"
           >
-            I earned a B.S. in mathematics and computer science and an M.S. in computer science at the University of Maryland, where I was a member of the Smith Investment Fund. Previously, I interned at Barclays on the equities trading desk and Goldman Sachs and RBC Capital Markets on the interest rate trading desks. I was very fortunate to work with amazing people at every company. I will be joining an AI startup in August 2026.
+            I earned a B.S. in mathematics and computer science and an M.S. in computer science at the University of Maryland, where I was a member of the Smith Investment Fund. Previously, I interned at Goldman Sachs and RBC Capital Markets on the interest rates trading and futures execution desks. I was very fortunate to work with amazing people at every company. I will be joining an AI startup in August 2026.
           </MotionText>
       </VStack>
     </PageLayout>
