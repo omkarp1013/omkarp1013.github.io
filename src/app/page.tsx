@@ -28,7 +28,7 @@ export default function Home() {
             lineHeight="1.7"
             color="gray.700"
           >
-            I love thinking and solving hard problems. Right now, I'm reading and thinking about macroeconomic policy, AI agents/infrastructure/training, general computer systems, and financial markets.
+            I love thinking about and solving hard problems. Right now, I'm reading and thinking about macroeconomic policy, AI agents/infrastructure/training, general computer systems, and financial markets.
           </Text>
 
           <Text
