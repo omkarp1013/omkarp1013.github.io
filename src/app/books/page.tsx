@@ -17,7 +17,7 @@ const fadeInUp = {
 
 const currentlyReading = [
   { title: 'Principles for Dealing with the Changing World Order', author: 'Ray Dalio' },
-  { title: 'Designing Data Intensive Systems', author: 'Martin Kleppmann' },
+  { title: 'Designing Data-Intensive Applications', author: 'Martin Kleppmann' },
 ];
 
 const upNext = [
@@ -33,7 +33,7 @@ export default function Reading() {
         <MotionHeading
           {...fadeInUp}
           as="h1"
-          fontSize={{ base: '2xl', md: '3xl' }}
+          fontSize={{ base: '3xl', md: '4xl' }}
           fontWeight="bold"
           letterSpacing="-0.02em"
           lineHeight="1.2"
@@ -44,7 +44,7 @@ export default function Reading() {
         <VStack align="stretch" gap={4}>
           <MotionText
             {...fadeInUp}
-            fontSize="sm"
+            fontSize="md"
             fontWeight="semibold"
             color="gray.900"
             letterSpacing="tight"
@@ -56,19 +56,19 @@ export default function Reading() {
               <Box 
                 as="li" 
                 key={index} 
-                fontSize="sm" 
+                fontSize="md" 
                 color="gray.700" 
                 lineHeight="1.7" 
                 marginBottom={1}
               >
-                <Text as="span" fontStyle="italic">{book.title}</Text> ({book.author})
+                <Text as="span" fontStyle="italic" fontWeight="bold">{book.title}</Text> ({book.author})
               </Box>
             ))}
           </Box>
 
           <MotionText
             {...fadeInUp}
-            fontSize="sm"
+            fontSize="md"
             fontWeight="semibold"
             color="gray.900"
             letterSpacing="tight"
@@ -81,12 +81,12 @@ export default function Reading() {
               <Box 
                 as="li" 
                 key={index} 
-                fontSize="sm" 
+                fontSize="md" 
                 color="gray.700" 
                 lineHeight="1.7" 
                 marginBottom={1}
               >
-                <Text as="span" fontStyle="italic">{book.title}</Text> ({book.author})
+                <Text as="span" fontStyle="italic" fontWeight="bold">{book.title}</Text> ({book.author})
               </Box>
             ))}
           </Box>

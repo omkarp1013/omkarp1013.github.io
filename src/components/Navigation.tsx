@@ -42,7 +42,7 @@ export default function Navigation() {
       >
         <VStack align="stretch" gap={4} flex={1}>
           <Text
-            fontSize="xs"
+            fontSize="sm"
             fontWeight="semibold"
             letterSpacing="wider"
             color="gray.600"
@@ -61,7 +61,7 @@ export default function Navigation() {
                 key={item.label}
                 href={item.href}
                 color="gray.900"
-                fontSize="sm"
+                fontSize="md"
                 fontWeight="normal"
                 _hover={{ color: 'gray.600', textDecoration: 'none' }}
                 transition="color 0.2s"
@@ -80,7 +80,7 @@ export default function Navigation() {
                 key={item.label}
                 href={item.href}
                 color="gray.900"
-                fontSize="sm"
+                fontSize="md"
                 fontWeight="normal"
                 _hover={{ color: 'gray.600', textDecoration: 'none' }}
                 transition="color 0.2s"
@@ -93,7 +93,7 @@ export default function Navigation() {
 
         <VStack align="stretch" gap={4} flex={1}>
           <Text
-            fontSize="xs"
+            fontSize="sm"
             fontWeight="semibold"
             letterSpacing="wider"
             color="gray.600"
@@ -111,14 +111,14 @@ export default function Navigation() {
                 key={item.label}
                 href={item.href}
                 color="gray.900"
-                fontSize="sm"
+                fontSize="md"
                 fontWeight="normal"
                 _hover={{ color: 'gray.600', textDecoration: 'none' }}
                 transition="color 0.2s"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <item.icon size={16} />
+                <item.icon size={18} />
               </Link>
             ))}
           </HStack>
@@ -132,7 +132,7 @@ export default function Navigation() {
                 key={item.label}
                 href={item.href}
                 color="gray.900"
-                fontSize="sm"
+                fontSize="md"
                 fontWeight="normal"
                 _hover={{ color: 'gray.600', textDecoration: 'none' }}
                 transition="color 0.2s"
@@ -140,7 +140,7 @@ export default function Navigation() {
                 rel="noopener noreferrer"
               >
                 <HStack gap={2.5}>
-                  <item.icon size={14} />
+                  <item.icon size={16} />
                   <Text>{item.label}</Text>
                 </HStack>
               </Link>

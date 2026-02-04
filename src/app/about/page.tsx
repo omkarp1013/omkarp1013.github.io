@@ -21,7 +21,7 @@ export default function About() {
         <MotionHeading
           {...fadeInUp}
           as="h1"
-          fontSize={{ base: '2xl', md: '3xl' }}
+          fontSize={{ base: '3xl', md: '4xl' }}
           fontWeight="bold"
           letterSpacing="-0.02em"
           lineHeight="1.2"
@@ -32,7 +32,7 @@ export default function About() {
 
         <MotionText
           {...fadeInUp}
-          fontSize="sm"
+          fontSize="md"
           lineHeight="1.7"
           color="gray.700"
         >
@@ -41,7 +41,7 @@ export default function About() {
 
         <MotionText
           {...fadeInUp}
-          fontSize="sm"
+          fontSize="md"
           lineHeight="1.7"
           color="gray.700"
         >
@@ -50,7 +50,7 @@ export default function About() {
 
         <MotionText
           {...fadeInUp}
-          fontSize="sm"
+          fontSize="md"
           lineHeight="1.7"
           color="gray.700"
         >
@@ -59,7 +59,7 @@ export default function About() {
 
         <MotionText
           {...fadeInUp}
-          fontSize="sm"
+          fontSize="md"
           lineHeight="1.7"
           color="gray.700"
         >
@@ -68,7 +68,7 @@ export default function About() {
 
         <MotionText
           {...fadeInUp}
-          fontSize="sm"
+          fontSize="md"
           lineHeight="1.7"
           color="gray.700"
         >

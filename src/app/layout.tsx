@@ -12,6 +12,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Omkar Pathak",
   description: "CS & Math @ UMD. Interested in financial markets, global macro trading, and building robust, high-performance infrastructure.",
+  icons: {
+    icon: 'data:,',
+  },
 };
 
 export default function RootLayout({
