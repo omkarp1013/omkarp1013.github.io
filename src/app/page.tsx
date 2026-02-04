@@ -1,66 +1,58 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
+
+import {
+  Heading,
+  Text,
+  Link,
+  VStack,
+} from '@chakra-ui/react';
+import { motion } from 'framer-motion';
+import PageLayout from '../components/PageLayout';
+
+const MotionHeading = motion(Heading);
+const MotionText = motion(Text);
+
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: '-100px' },
+  transition: { duration: 0.6 },
+};
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <PageLayout>
+      <VStack align="stretch" gap={4}>
+          <MotionHeading
+            {...fadeInUp}
+            as="h1"
+            fontSize={{ base: '2xl', md: '3xl' }}
+            fontWeight="bold"
+            letterSpacing="-0.02em"
+            lineHeight="1.2"
+            marginBottom="0.5rem"
           >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            Omkar Pathak
+          </MotionHeading>
+
+          <MotionText
+            {...fadeInUp}
+            fontSize="sm"
+            lineHeight="1.7"
+            color="gray.700"
           >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+            I love thinking and solving hard problems. Right now, I'm reading and thinking about macroeconomic policy, AI agents/infrastructure/training, general computer systems, and financial markets.
+          </MotionText>
+
+          <MotionText
+            {...fadeInUp}
+            fontSize="sm"
+            lineHeight="1.7"
+            color="gray.700"
+          >
+            I earned a B.S. in mathematics and computer science and an M.S. in computer science at the University of Maryland, where I was a member of the Smith Investment Fund. Previously, I interned at Barclays on the equities trading desk and Goldman Sachs and RBC Capital Markets on the interest rate trading desks. I was very fortunate to work with amazing people at every company. I will be joining an AI startup in August 2026.
+          </MotionText>
+      </VStack>
+    </PageLayout>
   );
 }
