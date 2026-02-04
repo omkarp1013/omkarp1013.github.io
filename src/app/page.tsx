@@ -50,7 +50,7 @@ export default function Home() {
             lineHeight="1.7"
             color="gray.700"
           >
-            I earned a B.S. in mathematics and computer science and an M.S. in computer science at the University of Maryland, where I was a member of the Smith Investment Fund. Previously, I interned at Goldman Sachs and RBC Capital Markets on the interest rates trading and futures execution desks. I was very fortunate to work with amazing people at every company.
+            I earned a B.S. in mathematics and computer science and an M.S. in computer science at the University of Maryland, where I was a member of the Smith Investment Fund. Previously, I interned at Goldman Sachs and RBC Capital Markets on the interest rates trading and futures execution desks. I was very fortunate to work with amazing people at both companies.
           </MotionText>
       </VStack>
     </PageLayout>
