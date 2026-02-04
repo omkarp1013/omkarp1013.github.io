@@ -1,19 +1,7 @@
 'use client';
 
 import { Heading, Text, VStack, Box } from '@chakra-ui/react';
-import { motion } from 'framer-motion';
 import PageLayout from '../../components/PageLayout';
-
-const MotionHeading = motion(Heading);
-const MotionText = motion(Text);
-const MotionBox = motion(Box);
-
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: '-100px' },
-  transition: { duration: 0.6 },
-};
 
 const currentlyReading = [
   { title: 'Principles for Dealing with the Changing World Order', author: 'Ray Dalio' },
@@ -30,8 +18,7 @@ export default function Reading() {
   return (
     <PageLayout>
       <VStack align="stretch" gap={4}>
-        <MotionHeading
-          {...fadeInUp}
+        <Heading
           as="h1"
           fontSize={{ base: '3xl', md: '4xl' }}
           fontWeight="bold"
@@ -39,18 +26,17 @@ export default function Reading() {
           lineHeight="1.2"
         >
           Reading
-        </MotionHeading>
+        </Heading>
 
         <VStack align="stretch" gap={4}>
-          <MotionText
-            {...fadeInUp}
+          <Text
             fontSize="md"
             fontWeight="semibold"
             color="gray.900"
             letterSpacing="tight"
           >
             Currently reading
-          </MotionText>
+          </Text>
           <Box as="ul" pl={4} margin={0} listStyleType="disc">
             {currentlyReading.map((book, index) => (
               <Box 
@@ -66,8 +52,7 @@ export default function Reading() {
             ))}
           </Box>
 
-          <MotionText
-            {...fadeInUp}
+          <Text
             fontSize="md"
             fontWeight="semibold"
             color="gray.900"
@@ -75,7 +60,7 @@ export default function Reading() {
             marginTop={2}
           >
             Up next
-          </MotionText>
+          </Text>
           <Box as="ul" pl={4} margin={0} listStyleType="disc">
             {upNext.map((book, index) => (
               <Box 
