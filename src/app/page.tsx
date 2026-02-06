@@ -56,7 +56,7 @@ export default function Home() {
           >
             I love thinking about and solving hard problems. Right now, I'm{' '}
             <Link
-              href="/books"
+              href="/reading"
               color="gray.900"
               textDecoration="underline"
               _hover={{ color: 'gray.600' }}

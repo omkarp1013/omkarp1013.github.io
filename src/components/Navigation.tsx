@@ -12,7 +12,7 @@ import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
 
 const navItems = [
   { label: 'Home', href: '/' },
-  { label: 'Reading', href: '/books' },
+  { label: 'Reading', href: '/reading' },
 ];
 
 const socialLinks = [
