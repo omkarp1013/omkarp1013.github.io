@@ -15,6 +15,10 @@ export const metadata: Metadata = {
   icons: {
     icon: 'data:,',
   },
+  openGraph: {
+    title: "Omkar Pathak",
+    description: "CS & Math @ UMD. Interested in financial markets, global macro trading, and building robust, high-performance infrastructure.",
+  },
 };
 
 export default function RootLayout({

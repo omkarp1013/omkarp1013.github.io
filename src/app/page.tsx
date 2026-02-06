@@ -5,13 +5,39 @@ import {
   Text,
   Link,
   VStack,
+  HStack,
+  Box,
 } from '@chakra-ui/react';
+import Image from 'next/image';
 import PageLayout from '../components/PageLayout';
 
 export default function Home() {
   return (
     <PageLayout>
-      <VStack align="stretch" gap={4}>
+      <Box position="relative">
+        <VStack align="stretch" gap={4} paddingRight={{ base: 0, md: '160px' }}>
+          <Box
+            position="absolute"
+            top={0}
+            right={0}
+            width={{ base: '120px', md: '140px' }}
+            height={{ base: '160px', md: '180px' }}
+            display={{ base: 'none', md: 'block' }}
+            borderRadius="md"
+            overflow="hidden"
+            border="1px solid"
+            borderColor="gray.200"
+            opacity={0.9}
+          >
+            <Image
+              src="/profile.jpg"
+              alt="Omkar Pathak"
+              fill
+              style={{ objectFit: 'cover' }}
+              priority
+            />
+          </Box>
+
           <Heading
             as="h1"
             fontSize={{ base: '3xl', md: '4xl' }}
@@ -45,9 +71,31 @@ export default function Home() {
             lineHeight="1.7"
             color="gray.700"
           >
-            I earned a B.S. in mathematics and computer science and an M.S. in computer science at the University of Maryland, where I was a member of the Smith Investment Fund. Previously, I interned at Goldman Sachs and RBC Capital Markets on the interest rates trading and futures execution desks. I was very fortunate to work with amazing people at both companies.
+            I am completing an M.S. in computer science and earned a B.S. in mathematics and computer science at the University of Maryland, where I was a member of the Smith Investment Fund. Previously, I interned at Goldman Sachs and RBC Capital Markets on the interest rates trading and futures execution desks. I was very fortunate to work with amazing people at both companies.
           </Text>
-      </VStack>
+
+          <Box
+            display={{ base: 'block', md: 'none' }}
+            position="relative"
+            width="120px"
+            height="160px"
+            borderRadius="md"
+            overflow="hidden"
+            border="1px solid"
+            borderColor="gray.200"
+            opacity={0.9}
+            marginTop={2}
+          >
+            <Image
+              src="/profile.jpg"
+              alt="Omkar Pathak"
+              fill
+              style={{ objectFit: 'cover' }}
+              priority
+            />
+          </Box>
+        </VStack>
+      </Box>
     </PageLayout>
   );
 }
