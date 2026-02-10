@@ -9,7 +9,7 @@ const currentlyReading = [
 ];
 
 const upNext = [
-  { title: '1929', author: 'Andrew Ross Sorkin' },
+  { title: 'Too Big to Fail', author: 'Andrew Ross Sorkin' },
   { title: 'Operating Systems: Three Easy Pieces', author: 'Arpaci-Dusseau et al.' },
   { title: 'Empire of AI: Dreams and Nightmares in Sam Altman\'s OpenAI', author: 'Karen Hao' },
 ];
