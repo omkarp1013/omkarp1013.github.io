@@ -39,19 +39,19 @@ function getPosts() {
 
 export default function WritingPage() {
   const posts = getPosts();
-  
+
   // Calculate dates in EST on the server to avoid client-side lag
   const getDateEST = (offsetDays = 0) => {
     const date = new Date();
     date.setDate(date.getDate() + offsetDays);
-    
+
     const estString = date.toLocaleDateString('en-US', {
       timeZone: 'America/New_York',
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
     });
-    
+
     const [m, d, y] = estString.split('/');
     return {
       slug: `${y}-${m}-${d}`,
@@ -64,7 +64,7 @@ export default function WritingPage() {
 
   // Combine actual posts with missing markers
   const displayItems = [...posts.map(p => ({ ...p, type: 'post' }))];
-  
+
   if (!posts.some(p => p.slug === today.slug)) {
     displayItems.push({
       slug: today.slug,
@@ -74,12 +74,12 @@ export default function WritingPage() {
       type: 'missing'
     });
   }
-  
+
   if (!posts.some(p => p.slug === yesterday.slug)) {
     displayItems.push({
       slug: yesterday.slug,
       year: yesterday.slug.split('-')[0],
-      title: 'I did not write anything on this day.',
+      title: 'I did not write anything today.',
       date: yesterday.slug,
       type: 'missing'
     });
@@ -92,18 +92,18 @@ export default function WritingPage() {
     <PageLayout>
       <VStack align="stretch" gap={6} color="gray.900">
         <Box>
-          <Heading 
-            as="h1" 
-            fontSize={{ base: '3xl', md: '4xl' }} 
-            fontWeight="bold" 
+          <Heading
+            as="h1"
+            fontSize={{ base: '3xl', md: '4xl' }}
+            fontWeight="bold"
             letterSpacing="-0.02em"
             marginBottom="0.5rem"
           >
             Writing
           </Heading>
-          
-          <Link 
-            href="/" 
+
+          <Link
+            href="/"
             style={{ textDecoration: 'underline', fontSize: '1rem', color: '#718096' }}
           >
             Back to home
@@ -119,7 +119,7 @@ export default function WritingPage() {
             {displayItems.map((item) => {
               const dateParts = item.date.split('-');
               const formattedDate = `[${dateParts[1]}/${dateParts[2]}/${dateParts[0]}]`;
-              
+
               if (item.type === 'missing') {
                 return (
                   <Text key={item.slug} color="gray.400" fontSize="md">
@@ -131,7 +131,7 @@ export default function WritingPage() {
               return (
                 <Box key={item.slug} fontSize="md" display="flex" gap={2}>
                   <Text as="span" color="gray.900">{formattedDate}</Text>
-                  <Link 
+                  <Link
                     href={`/writing/${item.year}/${item.slug}`}
                     style={{ textDecoration: 'underline', color: '#171717' }}
                   >
