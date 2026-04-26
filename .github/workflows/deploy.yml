@@ -6,7 +6,7 @@ on:
       - main
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *' # Rebuild every day at midnight UTC
+    - cron: '0 5 * * *' # Rebuild every day at 12am EST (5am UTC)
 
 permissions:
   contents: read

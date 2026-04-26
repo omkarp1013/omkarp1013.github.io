@@ -13,6 +13,8 @@ interface PostPageProps {
   }>;
 }
 
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   const WRITING_DIR = path.join(process.cwd(), 'src/content/writing');
   const paths: { year: string; slug: string }[] = [];
@@ -47,9 +49,7 @@ export default async function PostPage({ params }: PostPageProps) {
       <PageLayout>
         <VStack align="stretch" gap={4}>
           <Heading as="h1" fontSize="2xl">Post Not Found</Heading>
-          <Link href="/writing" passHref legacyBehavior>
-            <ChakraLink textDecoration="underline">Back to writing</ChakraLink>
-          </Link>
+          <Link href="/writing" style={{ textDecoration: 'underline' }}>Back to writing</Link>
         </VStack>
       </PageLayout>
     );
@@ -78,10 +78,11 @@ export default async function PostPage({ params }: PostPageProps) {
         </div>
 
         <div style={{ marginBottom: '1rem' }}>
-          <Link href="/writing" passHref legacyBehavior>
-            <ChakraLink textDecoration="underline" fontSize="1rem" color="#171717" _hover={{ color: 'gray.600' }}>
-              Back to writing
-            </ChakraLink>
+          <Link 
+            href="/writing" 
+            style={{ textDecoration: 'underline', fontSize: '1rem', color: '#718096' }}
+          >
+            Back to writing
           </Link>
         </div>
         
