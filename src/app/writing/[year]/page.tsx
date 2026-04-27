@@ -51,6 +51,8 @@ function getPosts(targetYear: string) {
   return posts.sort((a, b) => b.date.localeCompare(a.date));
 }
 
+export const revalidate = 3600; // Revalidate every hour
+
 export default async function YearPage({ params }: YearPageProps) {
   const { year } = await params;
   const posts = getPosts(year);
@@ -74,30 +76,37 @@ export default async function YearPage({ params }: YearPageProps) {
     };
   };
 
+  const currentEST = getDateEST(0);
+  const currentYearEST = currentEST.slug.split('-')[0];
   const postSlugs = new Set(posts.map(p => p.slug));
   const displayItems = [...posts.map(p => ({ ...p, type: 'post' }))];
 
-  // Only add missing markers if we are looking at the current year (2026)
-  if (year === '2026') {
-    // Check from today back to 2026-04-24 for gaps
+  const START_DATE = '2026-04-24';
+
+  // Only add missing markers if we are looking at the current year or a past year that started after START_DATE
+  if (year <= currentYearEST) {
     let i = 0;
     while (true) {
       const d = getDateEST(i);
-      // Only process dates that are in the target year
-      if (d.slug.startsWith(year)) {
+      
+      // Stop if we go before the challenge started or before the year we are viewing
+      if (d.slug < START_DATE || d.slug < `${year}-01-01`) break;
+
+      // Only process dates that are in the target year and not in the future
+      if (d.slug.startsWith(year) && d.slug <= currentEST.slug) {
         if (!postSlugs.has(d.slug)) {
           displayItems.push({
             slug: d.slug,
             year: d.slug.split('-')[0],
-            title: 'I did not write anything today.',
+            title: 'I did not post anything today.',
             date: d.slug,
             type: 'missing'
           });
         }
       }
-      if (d.slug === '2026-04-24') break;
+      
       i--;
-      if (i < -2000) break; // Safety break
+      if (i < -5000) break; // Safety break
     }
   }
 

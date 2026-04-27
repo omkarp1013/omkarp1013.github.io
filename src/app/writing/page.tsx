@@ -8,15 +8,27 @@ import React from 'react';
 
 const WRITING_DIR = path.join(process.cwd(), 'src/content/writing');
 
+export const revalidate = 3600; // Revalidate every hour to update dates at midnight
+
 function getYears() {
+  const currentYear = new Date().toLocaleDateString('en-US', {
+    timeZone: 'America/New_York',
+    year: 'numeric'
+  });
+
   try {
-    const entries = fs.readdirSync(WRITING_DIR);
-    return entries
-      .filter(entry => fs.statSync(path.join(WRITING_DIR, entry)).isDirectory())
-      .sort((a, b) => b.localeCompare(a)); // Newest years first
+    const entries = fs.existsSync(WRITING_DIR) ? fs.readdirSync(WRITING_DIR) : [];
+    const years = entries
+      .filter(entry => fs.statSync(path.join(WRITING_DIR, entry)).isDirectory());
+    
+    if (!years.includes(currentYear)) {
+      years.push(currentYear);
+    }
+    
+    return years.sort((a, b) => b.localeCompare(a)); // Newest years first
   } catch (e) {
     console.error("Error reading years:", e);
-    return [];
+    return [currentYear];
   }
 }
 
