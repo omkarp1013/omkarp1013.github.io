@@ -15,14 +15,24 @@ interface YearPageProps {
 }
 
 export async function generateStaticParams() {
+  const currentYear = new Date().toLocaleDateString('en-US', {
+    timeZone: 'America/New_York',
+    year: 'numeric'
+  });
+
   try {
-    const entries = fs.readdirSync(WRITING_DIR);
-    return entries
-      .filter(entry => fs.statSync(path.join(WRITING_DIR, entry)).isDirectory())
-      .map(year => ({ year }));
+    const entries = fs.existsSync(WRITING_DIR) ? fs.readdirSync(WRITING_DIR) : [];
+    const years = entries
+      .filter(entry => fs.statSync(path.join(WRITING_DIR, entry)).isDirectory());
+    
+    if (!years.includes(currentYear)) {
+      years.push(currentYear);
+    }
+
+    return years.map(year => ({ year }));
   } catch (e) {
     console.error("Error generating static params for years:", e);
-    return [];
+    return [{ year: currentYear }];
   }
 }
 

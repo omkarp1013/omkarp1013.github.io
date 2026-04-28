@@ -6,7 +6,8 @@ on:
       - main
   workflow_dispatch:
   schedule:
-    - cron: '0 5 * * *' # Rebuild every day at 12am EST (5am UTC)
+    - cron: '5 4 * * *'  # ~12:05 AM EDT (4:05 AM UTC) — primary daily rebuild
+    - cron: '35 4 * * *' # ~12:35 AM EDT (4:35 AM UTC) — safety net for GitHub delays
 
 permissions:
   contents: read
