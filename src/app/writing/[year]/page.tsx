@@ -108,7 +108,7 @@ export default async function YearPage({ params }: YearPageProps) {
           displayItems.push({
             slug: d.slug,
             year: d.slug.split('-')[0],
-            title: 'I did not post anything today.',
+            title: 'I did not write anything today.',
             date: d.slug,
             type: 'missing'
           });
