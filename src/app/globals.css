@@ -15,6 +15,17 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
-  background-color: #ffffff;
-  color: #171717;
+}
+
+.dark body {
+  background-color: var(--chakra-colors-gray-900, #171923);
+  color: var(--chakra-colors-gray-200, #e2e8f0);
+}
+
+.dark .post-content {
+  color: #e2e8f0 !important;
+}
+
+.dark .post-body {
+  color: #cbd5e0 !important;
 }

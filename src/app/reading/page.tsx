@@ -33,6 +33,7 @@ export default function Reading() {
             fontSize="md"
             fontWeight="semibold"
             color="gray.900"
+            _dark={{ color: "gray.100" }}
             letterSpacing="tight"
           >
             Currently reading
@@ -44,6 +45,7 @@ export default function Reading() {
                 key={index} 
                 fontSize="md" 
                 color="gray.700" 
+                _dark={{ color: "gray.300" }}
                 lineHeight="1.7" 
                 marginBottom={1}
               >
@@ -56,6 +58,7 @@ export default function Reading() {
             fontSize="md"
             fontWeight="semibold"
             color="gray.900"
+            _dark={{ color: "gray.100" }}
             letterSpacing="tight"
             marginTop={2}
           >
@@ -68,6 +71,7 @@ export default function Reading() {
                 key={index} 
                 fontSize="md" 
                 color="gray.700" 
+                _dark={{ color: "gray.300" }}
                 lineHeight="1.7" 
                 marginBottom={1}
               >

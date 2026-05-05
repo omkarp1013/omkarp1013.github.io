@@ -8,7 +8,10 @@ import {
   HStack,
 } from '@chakra-ui/react';
 import { usePathname } from 'next/navigation';
-import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaSun } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
+import { useTheme } from 'next-themes';
+import { useState, useEffect } from 'react';
 
 const navItems = [
   { label: 'Home', href: '/' },
@@ -19,11 +22,22 @@ const navItems = [
 const socialLinks = [
   { label: 'GitHub', href: 'https://github.com/omkarp1013', icon: FaGithub },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/omkarp0706/', icon: FaLinkedin },
-  { label: 'Twitter', href: 'https://x.com/omkarp1013/', icon: FaTwitter },
+  { label: 'X', href: 'https://x.com/omkarp1013/', icon: FaXTwitter },
 ];
 
 export default function Navigation() {
   const pathname = usePathname();
+  const { theme, setTheme, systemTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const currentTheme = theme === 'system' ? systemTheme : theme;
+  const toggleTheme = () => {
+    setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+  };
 
   const isActive = (href: string) => {
     if (href === '/') {
@@ -46,16 +60,33 @@ export default function Navigation() {
         gap={{ base: 4, md: 6 }}
       >
         <VStack align="stretch" gap={4} flex={1}>
-          <Text
-            fontSize="md"
-            fontWeight="bold"
-            letterSpacing="wider"
-            color="gray.600"
-            textTransform="uppercase"
-            marginBottom={1}
-          >
-            NAVIGATION
-          </Text>
+          <HStack justify="space-between" align="center" marginBottom={1}>
+            <Text
+              fontSize="md"
+              fontWeight="bold"
+              letterSpacing="wider"
+              color="gray.600"
+              _dark={{ color: "gray.300" }}
+              textTransform="uppercase"
+            >
+              NAVIGATION
+            </Text>
+            {mounted && (
+              <Link
+                onClick={toggleTheme}
+                cursor="pointer"
+                color="gray.900"
+                _dark={{ color: "gray.200" }}
+                fontSize="lg"
+                fontWeight="normal"
+                _hover={{ color: 'gray.600', _dark: { color: "gray.300" }, textDecoration: 'none' }}
+                _focus={{ outline: 'none' }}
+                transition="color 0.2s"
+              >
+                <FaSun size={18} />
+              </Link>
+            )}
+          </HStack>
           <HStack 
             gap={4} 
             flexWrap="wrap"
@@ -68,9 +99,10 @@ export default function Navigation() {
                   key={item.label}
                   href={item.href}
                   color={active ? 'gray.900' : 'gray.500'}
+                  _dark={{ color: active ? 'white' : 'gray.300' }}
                   fontSize="lg"
                   fontWeight="normal"
-                  _hover={active ? { color: 'gray.900', textDecoration: 'none' } : { color: 'gray.700', textDecoration: 'none' }}
+                  _hover={active ? { color: 'gray.900', _dark: { color: 'white' }, textDecoration: 'none' } : { color: 'gray.700', _dark: { color: 'gray.200' }, textDecoration: 'none' }}
                   _focus={{ outline: 'none' }}
                   transition="color 0.2s"
                 >
@@ -91,9 +123,10 @@ export default function Navigation() {
                   key={item.label}
                   href={item.href}
                   color={active ? 'gray.900' : 'gray.500'}
+                  _dark={{ color: active ? 'white' : 'gray.300' }}
                   fontSize="lg"
                   fontWeight="normal"
-                  _hover={active ? { color: 'gray.900', textDecoration: 'none' } : { color: 'gray.700', textDecoration: 'none' }}
+                  _hover={active ? { color: 'gray.900', _dark: { color: 'white' }, textDecoration: 'none' } : { color: 'gray.700', _dark: { color: 'gray.200' }, textDecoration: 'none' }}
                   _focus={{ outline: 'none' }}
                   transition="color 0.2s"
                 >
@@ -110,6 +143,7 @@ export default function Navigation() {
             fontWeight="semibold"
             letterSpacing="wider"
             color="gray.600"
+            _dark={{ color: "gray.300" }}
             textTransform="uppercase"
             marginBottom={1}
           >
@@ -124,9 +158,10 @@ export default function Navigation() {
                 key={item.label}
                 href={item.href}
                 color="gray.900"
+                _dark={{ color: "gray.200" }}
                 fontSize="lg"
                 fontWeight="normal"
-                _hover={{ color: 'gray.600', textDecoration: 'none' }}
+                _hover={{ color: 'gray.600', _dark: { color: 'gray.300' }, textDecoration: 'none' }}
                 _focus={{ outline: 'none' }}
                 transition="color 0.2s"
                 target="_blank"
@@ -146,9 +181,10 @@ export default function Navigation() {
                 key={item.label}
                 href={item.href}
                 color="gray.900"
+                _dark={{ color: "gray.200" }}
                 fontSize="lg"
                 fontWeight="normal"
-                _hover={{ color: 'gray.600', textDecoration: 'none' }}
+                _hover={{ color: 'gray.600', _dark: { color: "gray.300" }, textDecoration: 'none' }}
                 _focus={{ outline: 'none' }}
                 transition="color 0.2s"
                 target="_blank"
@@ -156,7 +192,7 @@ export default function Navigation() {
               >
                 <HStack gap={2.5}>
                   <item.icon size={18} />
-                  <Text>{item.label}</Text>
+                  {item.label !== 'X' && <Text>{item.label}</Text>}
                 </HStack>
               </Link>
             ))}

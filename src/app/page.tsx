@@ -53,11 +53,13 @@ export default function Home() {
             fontSize="md"
             lineHeight="1.7"
             color="gray.700"
+            _dark={{ color: "gray.300" }}
           >
             I love thinking about and solving hard problems. Right now, I'm{' '}
             <Link
               href="/reading"
               color="gray.900"
+              _dark={{ color: "gray.100" }}
               textDecoration="underline"
               _hover={{ color: 'gray.600' }}
             >
@@ -70,6 +72,7 @@ export default function Home() {
             fontSize="md"
             lineHeight="1.7"
             color="gray.700"
+            _dark={{ color: "gray.300" }}
           >
             I am completing an M.S. in computer science and earned a B.S. in mathematics and computer science at the University of Maryland, where I was a member of the Smith Investment Fund. Previously, I interned at Goldman Sachs and RBC Capital Markets on the interest rates trading and futures execution desks. I was very fortunate to work with amazing people at both companies.
           </Text>
