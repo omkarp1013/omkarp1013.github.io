@@ -10,9 +10,7 @@ on:
     # We fire slightly BEFORE midnight so the build lands right at or just after 12 AM ET.
     - cron: '55 3 * * *'  # 11:55 PM EDT (UTC-4) — just before midnight during daylight saving
     - cron: '55 4 * * *'  # 11:55 PM EST (UTC-5) — just before midnight during standard time
-    # Safety-net triggers in case the above are delayed
-    - cron: '15 4 * * *'  # 12:15 AM EDT backup
-    - cron: '15 5 * * *'  # 12:15 AM EST backup
+
 
 permissions:
   contents: read
