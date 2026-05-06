@@ -68,7 +68,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
   return (
     <PageLayout>
-      <div style={{ maxWidth: '800px', color: '#171717' }}>
+      <div style={{ maxWidth: '800px' }} className="post-content">
         <h1 style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '0.8rem', lineHeight: 1.1, letterSpacing: '-0.02em' }}>
           {data.title || slug}
         </h1>
@@ -86,7 +86,7 @@ export default async function PostPage({ params }: PostPageProps) {
           </Link>
         </div>
         
-        <div style={{ fontSize: '1.05rem', lineHeight: 1.7, whiteSpace: 'pre-wrap', color: 'gray.700' }}>
+        <div style={{ fontSize: '1.05rem', lineHeight: 1.7, whiteSpace: 'pre-wrap' }} className="post-body">
           {content}
         </div>
       </div>

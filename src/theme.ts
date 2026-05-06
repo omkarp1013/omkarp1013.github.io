@@ -4,13 +4,6 @@ const customConfig = {
   ...defaultConfig,
   theme: {
     ...defaultConfig.theme,
-    tokens: {
-      ...defaultConfig.theme?.tokens,
-      colors: {
-        ...defaultConfig.theme?.tokens?.colors,
-        background: { value: '#ffffff' },
-      },
-    },
   },
 };
 

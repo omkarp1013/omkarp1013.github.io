@@ -125,7 +125,7 @@ export default async function YearPage({ params }: YearPageProps) {
 
   return (
     <PageLayout>
-      <VStack align="stretch" gap={6} color="gray.900">
+      <VStack align="stretch" gap={6} color="gray.900" _dark={{ color: "gray.100" }}>
         <Box>
           <Heading
             as="h1"
@@ -146,7 +146,7 @@ export default async function YearPage({ params }: YearPageProps) {
         </Box>
 
         <VStack align="stretch" gap={4} marginTop={4}>
-          <Text fontSize="md" fontWeight="semibold" fontStyle="italic" color="gray.700">
+          <Text fontSize="md" fontWeight="semibold" fontStyle="italic" color="gray.700" _dark={{ color: "gray.300" }}>
             Shorter thoughts (that I try to post every day):
           </Text>
 
@@ -165,10 +165,11 @@ export default async function YearPage({ params }: YearPageProps) {
 
               return (
                 <Box key={item.slug} fontSize="md" display="flex" gap={2}>
-                  <Text as="span" color="gray.900">{formattedDate}</Text>
+                  <Text as="span" color="gray.900" _dark={{ color: "gray.300" }}>{formattedDate}</Text>
                   <Link
                     href={`/writing/${item.year}/${item.slug}`}
-                    style={{ textDecoration: 'underline', color: '#171717' }}
+                    className="post-link"
+                    style={{ textDecoration: 'underline' }}
                   >
                     {item.title}
                   </Link>

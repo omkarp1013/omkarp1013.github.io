@@ -37,7 +37,7 @@ export default function WritingIndexPage() {
 
   return (
     <PageLayout>
-      <VStack align="stretch" gap={6} color="gray.900">
+      <VStack align="stretch" gap={6} color="gray.900" _dark={{ color: "gray.100" }}>
         <Box>
           <Heading
             as="h1"
@@ -63,7 +63,8 @@ export default function WritingIndexPage() {
               <Box key={year} fontSize="2xl">
                 <Link
                   href={`/writing/${year}`}
-                  style={{ textDecoration: 'underline', color: '#171717', fontWeight: 600 }}
+                  style={{ textDecoration: 'underline', fontWeight: 600 }}
+                  className="year-link"
                 >
                   {year}
                 </Link>
