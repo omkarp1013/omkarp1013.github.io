@@ -6,10 +6,10 @@ on:
       - main
   workflow_dispatch:
   schedule:
-    # GitHub Actions cron is best-effort and often delayed 5-15+ min at :00.
-    # We fire slightly BEFORE midnight so the build lands right at or just after 12 AM ET.
-    - cron: '55 3 * * *'  # 11:55 PM EDT (UTC-4) — just before midnight during daylight saving
-    - cron: '55 4 * * *'  # 11:55 PM EST (UTC-5) — just before midnight during standard time
+    # Daily rebuild to pick up any new markdown posts.
+    # Exact midnight timing is NOT needed — the "today" date and missing-day
+    # placeholders are computed client-side in the browser (EST timezone).
+    - cron: '0 5 * * *'  # 5:00 AM UTC (~1 AM ET)
 
 
 permissions:

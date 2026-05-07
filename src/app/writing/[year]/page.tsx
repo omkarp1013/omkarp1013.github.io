@@ -1,10 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { Heading, Text, VStack, Box, Link as ChakraLink } from '@chakra-ui/react';
+import { Heading, Text, VStack, Box } from '@chakra-ui/react';
 import PageLayout from '../../../components/PageLayout';
 import Link from 'next/link';
 import React from 'react';
+import WritingYearClient from '../../../components/WritingYearClient';
 
 const WRITING_DIR = path.join(process.cwd(), 'src/content/writing');
 
@@ -61,67 +62,9 @@ function getPosts(targetYear: string) {
   return posts.sort((a, b) => b.date.localeCompare(a.date));
 }
 
-export const revalidate = 3600; // Revalidate every hour
-
 export default async function YearPage({ params }: YearPageProps) {
   const { year } = await params;
   const posts = getPosts(year);
-
-  // Calculate dates in EST on the server to avoid client-side lag
-  const getDateEST = (offsetDays = 0) => {
-    const date = new Date();
-    date.setDate(date.getDate() + offsetDays);
-
-    const estString = date.toLocaleDateString('en-US', {
-      timeZone: 'America/New_York',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    });
-
-    const [m, d, y] = estString.split('/');
-    return {
-      slug: `${y}-${m}-${d}`,
-      display: `${m}/${d}/${y}`
-    };
-  };
-
-  const currentEST = getDateEST(0);
-  const currentYearEST = currentEST.slug.split('-')[0];
-  const postSlugs = new Set(posts.map(p => p.slug));
-  const displayItems = [...posts.map(p => ({ ...p, type: 'post' }))];
-
-  const START_DATE = '2026-04-24';
-
-  // Only add missing markers if we are looking at the current year or a past year that started after START_DATE
-  if (year <= currentYearEST) {
-    let i = 0;
-    while (true) {
-      const d = getDateEST(i);
-      
-      // Stop if we go before the challenge started or before the year we are viewing
-      if (d.slug < START_DATE || d.slug < `${year}-01-01`) break;
-
-      // Only process dates that are in the target year and not in the future
-      if (d.slug.startsWith(year) && d.slug <= currentEST.slug) {
-        if (!postSlugs.has(d.slug)) {
-          displayItems.push({
-            slug: d.slug,
-            year: d.slug.split('-')[0],
-            title: 'I did not write anything today.',
-            date: d.slug,
-            type: 'missing'
-          });
-        }
-      }
-      
-      i--;
-      if (i < -5000) break; // Safety break
-    }
-  }
-
-  // Sort everything by date descending
-  displayItems.sort((a, b) => b.date.localeCompare(a.date));
 
   return (
     <PageLayout>
@@ -150,33 +93,12 @@ export default async function YearPage({ params }: YearPageProps) {
             Shorter thoughts (that I try to post every day):
           </Text>
 
-          <VStack align="stretch" gap={3}>
-            {displayItems.map((item) => {
-              const dateParts = item.date.split('-');
-              const formattedDate = `[${dateParts[1]}/${dateParts[2]}/${dateParts[0]}]`;
-
-              if (item.type === 'missing') {
-                return (
-                  <Text key={item.slug} color="gray.400" fontSize="md">
-                    {formattedDate} {item.title}
-                  </Text>
-                );
-              }
-
-              return (
-                <Box key={item.slug} fontSize="md" display="flex" gap={2}>
-                  <Text as="span" color="gray.900" _dark={{ color: "gray.300" }}>{formattedDate}</Text>
-                  <Link
-                    href={`/writing/${item.year}/${item.slug}`}
-                    className="post-link"
-                    style={{ textDecoration: 'underline' }}
-                  >
-                    {item.title}
-                  </Link>
-                </Box>
-              );
-            })}
-          </VStack>
+          {/* Client component handles date logic so "today" updates at midnight EST in the browser */}
+          <WritingYearClient
+            year={year}
+            posts={posts.map(p => ({ slug: p.slug, year: p.year, title: p.title, date: p.date }))}
+            startDate="2026-04-24"
+          />
         </VStack>
       </VStack>
     </PageLayout>
