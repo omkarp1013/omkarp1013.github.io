@@ -17,6 +17,7 @@ body {
   height: 100%;
 }
 
+.dark,
 .dark body {
   background-color: var(--chakra-colors-gray-900, #171923);
   color: var(--chakra-colors-gray-200, #e2e8f0);

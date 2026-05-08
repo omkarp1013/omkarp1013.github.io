@@ -8,6 +8,7 @@ import {
   HStack,
   Box,
 } from '@chakra-ui/react';
+import NextLink from 'next/link';
 import Image from 'next/image';
 import PageLayout from '../components/PageLayout';
 
@@ -57,13 +58,15 @@ export default function Home() {
           >
             I love thinking about and solving hard problems. Right now, I'm{' '}
             <Link
-              href="/reading"
+              asChild
               color="gray.900"
               _dark={{ color: "gray.100" }}
               textDecoration="underline"
               _hover={{ color: 'gray.600' }}
             >
-              reading
+              <NextLink href="/reading">
+                reading
+              </NextLink>
             </Link>
             {' '}and thinking about macroeconomic policy, AI agents/infrastructure/training, general computer systems, and financial markets.
           </Text>

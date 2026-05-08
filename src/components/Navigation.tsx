@@ -7,6 +7,7 @@ import {
   Link,
   HStack,
 } from '@chakra-ui/react';
+import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FaGithub, FaLinkedin, FaSun } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
@@ -96,8 +97,8 @@ export default function Navigation() {
               const active = isActive(item.href);
               return (
                 <Link
+                  asChild
                   key={item.label}
-                  href={item.href}
                   color={active ? 'gray.900' : 'gray.500'}
                   _dark={{ color: active ? 'white' : 'gray.300' }}
                   fontSize="lg"
@@ -106,7 +107,9 @@ export default function Navigation() {
                   _focus={{ outline: 'none' }}
                   transition="color 0.2s"
                 >
-                  {item.label}
+                  <NextLink href={item.href}>
+                    {item.label}
+                  </NextLink>
                 </Link>
               );
             })}
@@ -120,8 +123,8 @@ export default function Navigation() {
               const active = isActive(item.href);
               return (
                 <Link
+                  asChild
                   key={item.label}
-                  href={item.href}
                   color={active ? 'gray.900' : 'gray.500'}
                   _dark={{ color: active ? 'white' : 'gray.300' }}
                   fontSize="lg"
@@ -130,7 +133,9 @@ export default function Navigation() {
                   _focus={{ outline: 'none' }}
                   transition="color 0.2s"
                 >
-                  {item.label}
+                  <NextLink href={item.href}>
+                    {item.label}
+                  </NextLink>
                 </Link>
               );
             })}
