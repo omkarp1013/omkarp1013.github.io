@@ -9,7 +9,7 @@ import {
   Box,
 } from '@chakra-ui/react';
 import NextLink from 'next/link';
-import Image from 'next/image';
+
 import PageLayout from '../components/PageLayout';
 
 export default function Home() {
@@ -30,12 +30,10 @@ export default function Home() {
             borderColor="gray.200"
             opacity={0.9}
           >
-            <Image
+            <img
               src="/profile.jpg"
               alt="Omkar Pathak"
-              fill
-              style={{ objectFit: 'cover' }}
-              priority
+              style={{ objectFit: 'cover', width: '100%', height: '100%' }}
             />
           </Box>
 
@@ -92,12 +90,10 @@ export default function Home() {
             opacity={0.9}
             marginTop={2}
           >
-            <Image
+            <img
               src="/profile.jpg"
               alt="Omkar Pathak"
-              fill
-              style={{ objectFit: 'cover' }}
-              priority
+              style={{ objectFit: 'cover', width: '100%', height: '100%' }}
             />
           </Box>
         </VStack>
