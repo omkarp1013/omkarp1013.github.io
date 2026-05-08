@@ -12,6 +12,7 @@ import NextLink from 'next/link';
 
 
 export default function Home() {
+  return (
     <>
       <Box position="relative">
         <VStack align="stretch" gap={4} paddingRight={{ base: 0, md: '160px' }}>
@@ -97,4 +98,5 @@ export default function Home() {
         </VStack>
       </Box>
     </>
+  );
 }
