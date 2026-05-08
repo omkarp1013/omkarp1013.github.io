@@ -12,7 +12,6 @@ import { usePathname } from 'next/navigation';
 import { FaGithub, FaLinkedin, FaSun } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import { useTheme } from 'next-themes';
-import { useState, useEffect } from 'react';
 
 const navItems = [
   { label: 'Home', href: '/' },
@@ -29,11 +28,6 @@ const socialLinks = [
 export default function Navigation() {
   const pathname = usePathname();
   const { theme, setTheme, systemTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const currentTheme = theme === 'system' ? systemTheme : theme;
   const toggleTheme = () => {
@@ -72,21 +66,19 @@ export default function Navigation() {
             >
               NAVIGATION
             </Text>
-            {mounted && (
-              <Link
-                onClick={toggleTheme}
-                cursor="pointer"
-                color="gray.900"
-                _dark={{ color: "gray.200" }}
-                fontSize="lg"
-                fontWeight="normal"
-                _hover={{ color: 'gray.600', _dark: { color: "gray.300" }, textDecoration: 'none' }}
-                _focus={{ outline: 'none' }}
-                transition="color 0.2s"
-              >
-                <FaSun size={18} />
-              </Link>
-            )}
+            <Link
+              onClick={toggleTheme}
+              cursor="pointer"
+              color="gray.900"
+              _dark={{ color: "gray.200" }}
+              fontSize="lg"
+              fontWeight="normal"
+              _hover={{ color: 'gray.600', _dark: { color: "gray.300" }, textDecoration: 'none' }}
+              _focus={{ outline: 'none' }}
+              transition="color 0.2s"
+            >
+              <FaSun size={18} />
+            </Link>
           </HStack>
           <HStack 
             gap={4} 
