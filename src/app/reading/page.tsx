@@ -1,7 +1,6 @@
 'use client';
 
 import { Heading, Text, VStack, Box } from '@chakra-ui/react';
-import PageLayout from '../../components/PageLayout';
 
 const currentlyReading = [
   { title: 'Principles for Dealing with the Changing World Order', author: 'Ray Dalio' },
@@ -16,7 +15,7 @@ const upNext = [
 
 export default function Reading() {
   return (
-    <PageLayout>
+    <>
       <VStack align="stretch" gap={4}>
         <Heading
           as="h1"
@@ -81,6 +80,6 @@ export default function Reading() {
           </Box>
         </VStack>
       </VStack>
-    </PageLayout>
+    </>
   );
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "../providers";
+import PageLayout from "../components/PageLayout";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -30,7 +31,11 @@ export default function RootLayout({
     <html lang="en" className={inter.variable} suppressHydrationWarning>
 
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <PageLayout>
+            {children}
+          </PageLayout>
+        </Providers>
       </body>
     </html>
   );

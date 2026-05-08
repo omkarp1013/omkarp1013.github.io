@@ -1,11 +1,10 @@
 'use client';
 
 import { Heading, Text, VStack } from '@chakra-ui/react';
-import PageLayout from '../../components/PageLayout';
 
 export default function About() {
   return (
-    <PageLayout>
+    <>
         <VStack align="stretch" gap={4}>
         <Heading
           as="h1"
@@ -63,6 +62,6 @@ export default function About() {
           Some thinkers who have influenced my worldview: Richard Feynman, David Deutsch, Carlo Rovelli, Ted Chiang, and Jiddu Krishnamurti. I believe the best ideas emerge from thinking across domains, questioning inherited wisdom, and engaging in rigorous conjecture, criticism, and testing.
         </Text>
       </VStack>
-    </PageLayout>
+    </>
   );
 }

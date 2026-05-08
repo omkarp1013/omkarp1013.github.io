@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { Heading, Text, VStack, Box, Link as ChakraLink } from '@chakra-ui/react';
-import PageLayout from '../../../../components/PageLayout';
 import Link from 'next/link';
 import React from 'react';
 
@@ -46,12 +45,12 @@ export default async function PostPage({ params }: PostPageProps) {
 
   if (!fs.existsSync(filePath)) {
     return (
-      <PageLayout>
+      <>
         <VStack align="stretch" gap={4}>
           <Heading as="h1" fontSize="2xl">Post Not Found</Heading>
           <Link href="/writing" style={{ textDecoration: 'underline' }}>Back to writing</Link>
         </VStack>
-      </PageLayout>
+      </>
     );
   }
 
@@ -67,7 +66,7 @@ export default async function PostPage({ params }: PostPageProps) {
   });
 
   return (
-    <PageLayout>
+    <>
       <div style={{ maxWidth: '800px' }} className="post-content">
         <h1 style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '0.8rem', lineHeight: 1.1, letterSpacing: '-0.02em' }}>
           {data.title || slug}
@@ -90,6 +89,6 @@ export default async function PostPage({ params }: PostPageProps) {
           {content}
         </div>
       </div>
-    </PageLayout>
+    </>
   );
 }

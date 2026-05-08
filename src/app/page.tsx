@@ -10,11 +10,9 @@ import {
 } from '@chakra-ui/react';
 import NextLink from 'next/link';
 
-import PageLayout from '../components/PageLayout';
 
 export default function Home() {
-  return (
-    <PageLayout>
+    <>
       <Box position="relative">
         <VStack align="stretch" gap={4} paddingRight={{ base: 0, md: '160px' }}>
           <Box
@@ -98,6 +96,5 @@ export default function Home() {
           </Box>
         </VStack>
       </Box>
-    </PageLayout>
-  );
+    </>
 }

@@ -1,10 +1,9 @@
 import Link from 'next/link';
 import { Heading, Text, VStack, Box } from '@chakra-ui/react';
-import PageLayout from '../components/PageLayout';
 
 export default function NotFound() {
   return (
-    <PageLayout>
+    <>
       <VStack align="stretch" gap={6}>
         <Box>
           <Text
@@ -49,6 +48,6 @@ export default function NotFound() {
           </Link>
         </Box>
       </VStack>
-    </PageLayout>
+    </>
   );
 }

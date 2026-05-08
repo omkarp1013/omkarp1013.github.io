@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { Heading, Text, VStack, Box } from '@chakra-ui/react';
-import PageLayout from '../../../components/PageLayout';
 import Link from 'next/link';
 import React from 'react';
 import WritingYearClient from '../../../components/WritingYearClient';
@@ -67,7 +66,7 @@ export default async function YearPage({ params }: YearPageProps) {
   const posts = getPosts(year);
 
   return (
-    <PageLayout>
+    <>
       <VStack align="stretch" gap={6} color="gray.900" _dark={{ color: "gray.100" }}>
         <Box>
           <Heading
@@ -101,6 +100,6 @@ export default async function YearPage({ params }: YearPageProps) {
           />
         </VStack>
       </VStack>
-    </PageLayout>
+    </>
   );
 }
