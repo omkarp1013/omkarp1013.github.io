@@ -56,30 +56,41 @@ function dateRange(from: string, to: string): string[] {
 }
 
 export default function WritingYearClient({ year, posts, startDate }: WritingYearClientProps) {
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const displayItems = useMemo(() => {
-    const todayEST = getTodayEST();
     const postSlugs = new Set(posts.map(p => p.slug));
 
     // Determine the range of dates to check for this year
     const yearStart = `${year}-01-01`;
     const rangeFrom = startDate > yearStart ? startDate : yearStart;
     const yearEnd = `${year}-12-31`;
-    const rangeTo = todayEST < yearEnd ? todayEST : yearEnd;
-
+    
     // Only add missing-day markers if the range makes sense
     const items: Array<Post & { type: string }> = posts.map(p => ({ ...p, type: 'post' }));
 
-    if (rangeFrom <= rangeTo) {
-      const allDates = dateRange(rangeFrom, rangeTo);
-      for (const d of allDates) {
-        if (!postSlugs.has(d)) {
-          items.push({
-            slug: d,
-            year: d.split('-')[0],
-            title: 'I did not write anything today.',
-            date: d,
-            type: 'missing',
-          });
+    // During SSR, we don't know the exact "today" without causing a hydration mismatch.
+    // So we only generate the missing items after the component has mounted on the client.
+    if (mounted && rangeFrom <= yearEnd) {
+      const todayEST = getTodayEST();
+      const rangeTo = todayEST < yearEnd ? todayEST : yearEnd;
+
+      if (rangeFrom <= rangeTo) {
+        const allDates = dateRange(rangeFrom, rangeTo);
+        for (const d of allDates) {
+          if (!postSlugs.has(d)) {
+            items.push({
+              slug: d,
+              year: d.split('-')[0],
+              title: 'I did not write anything today.',
+              date: d,
+              type: 'missing',
+            });
+          }
         }
       }
     }
@@ -87,7 +98,7 @@ export default function WritingYearClient({ year, posts, startDate }: WritingYea
     // Sort descending by date
     items.sort((a, b) => b.date.localeCompare(a.date));
     return items;
-  }, [year, posts, startDate]);
+  }, [year, posts, startDate, mounted]);
 
   return (
     <VStack align="stretch" gap={3}>

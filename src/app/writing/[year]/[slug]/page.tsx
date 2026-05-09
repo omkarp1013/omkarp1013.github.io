@@ -48,7 +48,7 @@ export default async function PostPage({ params }: PostPageProps) {
       <>
         <VStack align="stretch" gap={4}>
           <Heading as="h1" fontSize="2xl">Post Not Found</Heading>
-          <Link href="/writing" style={{ textDecoration: 'underline' }}>Back to writing</Link>
+          <Link href={`/writing/${year}`} style={{ textDecoration: 'underline' }}>Back to {year} writing</Link>
         </VStack>
       </>
     );
@@ -78,10 +78,10 @@ export default async function PostPage({ params }: PostPageProps) {
 
         <div style={{ marginBottom: '1rem' }}>
           <Link 
-            href="/writing" 
+            href={`/writing/${year}`} 
             style={{ textDecoration: 'underline', fontSize: '1rem', color: '#718096' }}
           >
-            Back to writing
+            Back to {year} writing
           </Link>
         </div>
         
