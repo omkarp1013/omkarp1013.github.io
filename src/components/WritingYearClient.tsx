@@ -56,11 +56,6 @@ function dateRange(from: string, to: string): string[] {
 }
 
 export default function WritingYearClient({ year, posts, startDate }: WritingYearClientProps) {
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const displayItems = useMemo(() => {
     const postSlugs = new Set(posts.map(p => p.slug));
@@ -73,9 +68,9 @@ export default function WritingYearClient({ year, posts, startDate }: WritingYea
     // Only add missing-day markers if the range makes sense
     const items: Array<Post & { type: string }> = posts.map(p => ({ ...p, type: 'post' }));
 
-    // During SSR, we don't know the exact "today" without causing a hydration mismatch.
-    // So we only generate the missing items after the component has mounted on the client.
-    if (mounted && rangeFrom <= yearEnd) {
+    // We generate the missing items directly so they are included in the initial SSR HTML,
+    // which prevents the page from flickering when refreshed.
+    if (rangeFrom <= yearEnd) {
       const todayEST = getTodayEST();
       const rangeTo = todayEST < yearEnd ? todayEST : yearEnd;
 
@@ -98,7 +93,7 @@ export default function WritingYearClient({ year, posts, startDate }: WritingYea
     // Sort descending by date
     items.sort((a, b) => b.date.localeCompare(a.date));
     return items;
-  }, [year, posts, startDate, mounted]);
+  }, [year, posts, startDate]);
 
   return (
     <VStack align="stretch" gap={3}>
