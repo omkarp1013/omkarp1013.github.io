@@ -68,11 +68,12 @@ export default function WritingYearClient({ year, posts, startDate }: WritingYea
     // Only add missing-day markers if the range makes sense
     const items: Array<Post & { type: string }> = posts.map(p => ({ ...p, type: 'post' }));
 
-    // We generate the missing items directly so they are included in the initial SSR HTML,
-    // which prevents the page from flickering when refreshed.
+    // We generate the missing items directly up to the end of the year so they are 
+    // included in the initial SSR HTML. This ensures that even if the daily cron job 
+    // is delayed, "today's" missing post is already in the HTML. We then use an inline
+    // script to hide future dates before the browser paints, preventing any flicker.
     if (rangeFrom <= yearEnd) {
-      const todayEST = getTodayEST();
-      const rangeTo = todayEST < yearEnd ? todayEST : yearEnd;
+      const rangeTo = yearEnd;
 
       if (rangeFrom <= rangeTo) {
         const allDates = dateRange(rangeFrom, rangeTo);
@@ -96,32 +97,64 @@ export default function WritingYearClient({ year, posts, startDate }: WritingYea
   }, [year, posts, startDate]);
 
   return (
-    <VStack align="stretch" gap={3}>
-      {displayItems.map((item) => {
-        const dateParts = item.date.split('-');
-        const formattedDate = `[${dateParts[1]}/${dateParts[2]}/${dateParts[0]}]`;
+    <>
+      <VStack align="stretch" gap={3}>
+        {displayItems.map((item) => {
+          const dateParts = item.date.split('-');
+          const formattedDate = `[${dateParts[1]}/${dateParts[2]}/${dateParts[0]}]`;
 
-        if (item.type === 'missing') {
+          if (item.type === 'missing') {
+            return (
+              <Text 
+                key={item.slug} 
+                color="gray.400" 
+                fontSize="md"
+                className="missing-item"
+                data-date={item.date}
+                suppressHydrationWarning
+              >
+                {formattedDate} {item.title}
+              </Text>
+            );
+          }
+
           return (
-            <Text key={item.slug} color="gray.400" fontSize="md">
-              {formattedDate} {item.title}
-            </Text>
+            <Box key={item.slug} fontSize="md" display="flex" gap={2}>
+              <Text as="span" color="gray.900" _dark={{ color: "gray.300" }}>{formattedDate}</Text>
+              <Link
+                href={`/writing/${item.year}/${item.slug}`}
+                className="post-link"
+                style={{ textDecoration: 'underline' }}
+              >
+                {item.title}
+              </Link>
+            </Box>
           );
-        }
-
-        return (
-          <Box key={item.slug} fontSize="md" display="flex" gap={2}>
-            <Text as="span" color="gray.900" _dark={{ color: "gray.300" }}>{formattedDate}</Text>
-            <Link
-              href={`/writing/${item.year}/${item.slug}`}
-              className="post-link"
-              style={{ textDecoration: 'underline' }}
-            >
-              {item.title}
-            </Link>
-          </Box>
-        );
-      })}
-    </VStack>
+        })}
+      </VStack>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              try {
+                var now = new Date();
+                var parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(now);
+                var y = parts.find(function(p) { return p.type === 'year'; }).value;
+                var m = parts.find(function(p) { return p.type === 'month'; }).value;
+                var d = parts.find(function(p) { return p.type === 'day'; }).value;
+                var today = y + '-' + m + '-' + d;
+                
+                var items = document.querySelectorAll('.missing-item');
+                for (var i = 0; i < items.length; i++) {
+                  if (items[i].getAttribute('data-date') > today) {
+                    items[i].style.display = 'none';
+                  }
+                }
+              } catch (e) {}
+            })();
+          `
+        }}
+      />
+    </>
   );
 }
