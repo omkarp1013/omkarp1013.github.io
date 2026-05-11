@@ -56,6 +56,11 @@ function dateRange(from: string, to: string): string[] {
 }
 
 export default function WritingYearClient({ year, posts, startDate }: WritingYearClientProps) {
+  const [clientToday, setClientToday] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    setClientToday(getTodayEST());
+  }, []);
 
   const displayItems = useMemo(() => {
     const postSlugs = new Set(posts.map(p => p.slug));
@@ -72,8 +77,9 @@ export default function WritingYearClient({ year, posts, startDate }: WritingYea
     // included in the initial SSR HTML. This ensures that even if the daily cron job 
     // is delayed, "today's" missing post is already in the HTML. We then use an inline
     // script to hide future dates before the browser paints, preventing any flicker.
+    // Once the client hydrates, we update the state with today's date and remove the future ones from the DOM.
     if (rangeFrom <= yearEnd) {
-      const rangeTo = yearEnd;
+      const rangeTo = clientToday ? (clientToday < yearEnd ? clientToday : yearEnd) : yearEnd;
 
       if (rangeFrom <= rangeTo) {
         const allDates = dateRange(rangeFrom, rangeTo);
@@ -144,11 +150,18 @@ export default function WritingYearClient({ year, posts, startDate }: WritingYea
                 var d = parts.find(function(p) { return p.type === 'day'; }).value;
                 var today = y + '-' + m + '-' + d;
                 
+                var css = '';
                 var items = document.querySelectorAll('.missing-item');
                 for (var i = 0; i < items.length; i++) {
-                  if (items[i].getAttribute('data-date') > today) {
-                    items[i].style.display = 'none';
+                  var date = items[i].getAttribute('data-date');
+                  if (date > today) {
+                    css += '[data-date="' + date + '"] { display: none !important; } ';
                   }
+                }
+                if (css) {
+                  var style = document.createElement('style');
+                  style.innerHTML = css;
+                  document.head.appendChild(style);
                 }
               } catch (e) {}
             })();
