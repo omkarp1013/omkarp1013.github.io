@@ -71,41 +71,82 @@ export default function WritingYearClient({ year, posts, startDate }: WritingYea
     const yearEnd = `${year}-12-31`;
     
     // Only add missing-day markers if the range makes sense
-    const items: Array<Post & { type: string }> = posts.map(p => ({ ...p, type: 'post' }));
+    const items: any[] = posts.map(p => ({ ...p, type: 'post' }));
 
-    // We generate the missing items directly up to the end of the year so they are 
-    // included in the initial SSR HTML. This ensures that even if the daily cron job 
-    // is delayed, "today's" missing post is already in the HTML. We then use an inline
-    // script to hide future dates before the browser paints, preventing any flicker.
-    // Once the client hydrates, we update the state with today's date and remove the future ones from the DOM.
+    const todayStr = clientToday || getTodayEST();
+
     if (rangeFrom <= yearEnd) {
-      const rangeTo = clientToday ? (clientToday < yearEnd ? clientToday : yearEnd) : yearEnd;
+      const rangeTo = todayStr < yearEnd ? todayStr : yearEnd;
 
       if (rangeFrom <= rangeTo) {
         const allDates = dateRange(rangeFrom, rangeTo);
-        for (const d of allDates) {
-          if (!postSlugs.has(d)) {
+        let missingStart: string | null = null;
+        let missingEnd: string | null = null;
+
+        const pushMissing = () => {
+          if (!missingStart || !missingEnd) return;
+          if (missingStart === missingEnd) {
             items.push({
-              slug: d,
-              year: d.split('-')[0],
+              slug: missingStart,
+              year: missingStart.split('-')[0],
               title: 'I did not write anything today.',
-              date: d,
+              date: missingStart,
               type: 'missing',
             });
+          } else {
+            items.push({
+              slug: `${missingStart}-to-${missingEnd}`,
+              year: missingStart.split('-')[0],
+              date: missingEnd,
+              startDate: missingStart,
+              endDate: missingEnd,
+              type: 'missing_range',
+            });
+          }
+          missingStart = null;
+          missingEnd = null;
+        };
+
+        for (const d of allDates) {
+          if (!postSlugs.has(d)) {
+            if (!missingStart) {
+              missingStart = d;
+            }
+            missingEnd = d;
+          } else {
+            pushMissing();
           }
         }
+        pushMissing();
       }
     }
 
     // Sort descending by date
     items.sort((a, b) => b.date.localeCompare(a.date));
     return items;
-  }, [year, posts, startDate]);
+  }, [year, posts, startDate, clientToday]);
 
   return (
     <>
       <VStack align="stretch" gap={3}>
         {displayItems.map((item) => {
+          if (item.type === 'missing_range') {
+            const startParts = item.startDate.split('-');
+            const endParts = item.endDate.split('-');
+            const formattedDate = `[${startParts[1]}/${startParts[2]}/${startParts[0]} – ${endParts[1]}/${endParts[2]}/${endParts[0]}]`;
+            
+            return (
+              <Text 
+                key={item.slug} 
+                color="gray.400" 
+                fontSize="md"
+                suppressHydrationWarning
+              >
+                {formattedDate} I did not write anything on these days
+              </Text>
+            );
+          }
+
           const dateParts = item.date.split('-');
           const formattedDate = `[${dateParts[1]}/${dateParts[2]}/${dateParts[0]}]`;
 
@@ -115,8 +156,6 @@ export default function WritingYearClient({ year, posts, startDate }: WritingYea
                 key={item.slug} 
                 color="gray.400" 
                 fontSize="md"
-                className="missing-item"
-                data-date={item.date}
                 suppressHydrationWarning
               >
                 {formattedDate} {item.title}
@@ -138,36 +177,6 @@ export default function WritingYearClient({ year, posts, startDate }: WritingYea
           );
         })}
       </VStack>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-            (function() {
-              try {
-                var now = new Date();
-                var parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(now);
-                var y = parts.find(function(p) { return p.type === 'year'; }).value;
-                var m = parts.find(function(p) { return p.type === 'month'; }).value;
-                var d = parts.find(function(p) { return p.type === 'day'; }).value;
-                var today = y + '-' + m + '-' + d;
-                
-                var css = '';
-                var items = document.querySelectorAll('.missing-item');
-                for (var i = 0; i < items.length; i++) {
-                  var date = items[i].getAttribute('data-date');
-                  if (date > today) {
-                    css += '[data-date="' + date + '"] { display: none !important; } ';
-                  }
-                }
-                if (css) {
-                  var style = document.createElement('style');
-                  style.innerHTML = css;
-                  document.head.appendChild(style);
-                }
-              } catch (e) {}
-            })();
-          `
-        }}
-      />
     </>
   );
 }
