@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Text, VStack, Box } from '@chakra-ui/react';
 import Link from 'next/link';
 
@@ -56,11 +56,10 @@ function dateRange(from: string, to: string): string[] {
 }
 
 export default function WritingYearClient({ year, posts, startDate }: WritingYearClientProps) {
-  const [clientToday, setClientToday] = React.useState<string | null>(null);
-
-  React.useEffect(() => {
-    setClientToday(getTodayEST());
-  }, []);
+  // Initialize directly so the very first client render already includes today's
+  // missing-day entries, avoiding a visible flash when useEffect would set state
+  // on the next tick.
+  const clientToday = getTodayEST();
 
   const displayItems = useMemo(() => {
     const postSlugs = new Set(posts.map(p => p.slug));
@@ -73,7 +72,7 @@ export default function WritingYearClient({ year, posts, startDate }: WritingYea
     // Only add missing-day markers if the range makes sense
     const items: any[] = posts.map(p => ({ ...p, type: 'post' }));
 
-    const todayStr = clientToday || getTodayEST();
+    const todayStr = clientToday;
 
     if (rangeFrom <= yearEnd) {
       const rangeTo = todayStr < yearEnd ? todayStr : yearEnd;
