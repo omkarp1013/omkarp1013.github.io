@@ -69,7 +69,7 @@ export default function WritingYearClient({ year, posts, startDate }: WritingYea
     const yearStart = `${year}-01-01`;
     const rangeFrom = startDate > yearStart ? startDate : yearStart;
     const yearEnd = `${year}-12-31`;
-    
+
     // Only add missing-day markers if the range makes sense
     const items: any[] = posts.map(p => ({ ...p, type: 'post' }));
 
@@ -134,11 +134,11 @@ export default function WritingYearClient({ year, posts, startDate }: WritingYea
             const startParts = item.startDate.split('-');
             const endParts = item.endDate.split('-');
             const formattedDate = `[${startParts[1]}/${startParts[2]}/${startParts[0]} – ${endParts[1]}/${endParts[2]}/${endParts[0]}]`;
-            
+
             return (
-              <Text 
-                key={item.slug} 
-                color="gray.400" 
+              <Text
+                key={item.slug}
+                color="gray.400"
                 fontSize="md"
                 suppressHydrationWarning
               >
@@ -152,9 +152,9 @@ export default function WritingYearClient({ year, posts, startDate }: WritingYea
 
           if (item.type === 'missing') {
             return (
-              <Text 
-                key={item.slug} 
-                color="gray.400" 
+              <Text
+                key={item.slug}
+                color="gray.400"
                 fontSize="md"
                 suppressHydrationWarning
               >
