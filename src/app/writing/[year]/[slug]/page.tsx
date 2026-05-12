@@ -97,6 +97,8 @@ export default async function PostPage({ params }: PostPageProps) {
             section[data-footnotes] li {
               counter-increment: footnotes-counter;
               position: relative;
+              font-size: 0.9rem;
+              color: #fff;
             }
             .footnote-backref {
               position: absolute;
@@ -109,7 +111,7 @@ export default async function PostPage({ params }: PostPageProps) {
             }
             .footnote-backref::before {
               content: counter(footnotes-counter) ".";
-              font-size: 1.05rem; /* Restore font size for the number */
+              font-size: 0.85rem; /* Smaller footnote number */
             }
             .footnote-backref:hover::before {
               text-decoration: underline;
