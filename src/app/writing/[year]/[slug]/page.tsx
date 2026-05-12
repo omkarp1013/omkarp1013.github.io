@@ -127,8 +127,8 @@ export default async function PostPage({ params }: PostPageProps) {
               strong: ({node, ...props}) => <strong style={{ fontWeight: 700 }} {...props} />,
               em: ({node, ...props}) => <em style={{ fontStyle: 'italic' }} {...props} />,
               a: ({node, children, className, ...props}) => {
-                const isBackref = (className && typeof className === 'string' && className.includes('data-footnote-backref')) || props['data-footnote-backref'];
-                const isRef = (className && typeof className === 'string' && className.includes('data-footnote-ref')) || props['data-footnote-ref'];
+                const isBackref = (className && typeof className === 'string' && className.includes('data-footnote-backref')) || (props as any)['data-footnote-backref'];
+                const isRef = (className && typeof className === 'string' && className.includes('data-footnote-ref')) || (props as any)['data-footnote-ref'];
 
                 if (isBackref) {
                   // Omit children entirely to remove the emoji
@@ -152,7 +152,7 @@ export default async function PostPage({ params }: PostPageProps) {
               h3: ({node, ...props}) => <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginTop: '1.25rem', marginBottom: '0.75rem' }} {...props} />,
               blockquote: ({node, ...props}) => <blockquote style={{ borderLeft: '4px solid #e2e8f0', paddingLeft: '1rem', color: '#4a5568', margin: '1rem 0' }} {...props} />,
               section: ({node, ...props}) => {
-                if (props['data-footnotes']) {
+                if ((props as any)['data-footnotes']) {
                   return <section style={{ marginTop: '5rem', paddingTop: '2rem', borderTop: '1px solid #e2e8f0' }} {...props} />;
                 }
                 return <section {...props} />;
