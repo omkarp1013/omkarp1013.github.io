@@ -143,7 +143,7 @@ export default async function PostPage({ params }: PostPageProps) {
               h1: ({node, ...props}) => <h1 style={{ fontSize: '2rem', fontWeight: 700, marginTop: '2rem', marginBottom: '1rem' }} {...props} />,
               h2: ({node, ...props}) => {
                 if (props.id === 'footnote-label') {
-                  return <h2 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#718096', marginBottom: '1rem' }} {...props} />;
+                  return <h2 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#ffffff', marginBottom: '1rem' }} {...props} />;
                 }
                 return <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginTop: '1.5rem', marginBottom: '1rem' }} {...props} />;
               },
