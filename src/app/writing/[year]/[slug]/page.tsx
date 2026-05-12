@@ -4,6 +4,8 @@ import matter from 'gray-matter';
 import { Heading, Text, VStack, Box, Link as ChakraLink } from '@chakra-ui/react';
 import Link from 'next/link';
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface PostPageProps {
   params: Promise<{
@@ -85,8 +87,78 @@ export default async function PostPage({ params }: PostPageProps) {
           </Link>
         </div>
         
-        <div style={{ fontSize: '1.05rem', lineHeight: 1.7, whiteSpace: 'pre-wrap' }} className="post-body">
-          {content}
+        <div style={{ fontSize: '1.05rem', lineHeight: 1.7 }} className="post-body">
+          <style>{`
+            section[data-footnotes] ol {
+              list-style-type: none !important;
+              counter-reset: footnotes-counter;
+              padding-left: 1.5rem;
+            }
+            section[data-footnotes] li {
+              counter-increment: footnotes-counter;
+              position: relative;
+            }
+            .footnote-backref {
+              position: absolute;
+              left: -1.5rem;
+              top: 0;
+              text-decoration: none !important;
+              color: #3182ce !important;
+              font-weight: 600;
+              font-size: 0; /* Hide the ↩ emoji */
+            }
+            .footnote-backref::before {
+              content: counter(footnotes-counter) ".";
+              font-size: 1.05rem; /* Restore font size for the number */
+            }
+            .footnote-backref:hover::before {
+              text-decoration: underline;
+            }
+            .footnote-backref ~ .footnote-backref {
+              display: none; /* Hide extra backrefs if footnote is referenced multiple times */
+            }
+          `}</style>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={{
+              p: ({node, ...props}) => <p style={{ marginBottom: '1rem' }} {...props} />,
+              strong: ({node, ...props}) => <strong style={{ fontWeight: 700 }} {...props} />,
+              em: ({node, ...props}) => <em style={{ fontStyle: 'italic' }} {...props} />,
+              a: ({node, children, className, ...props}) => {
+                const isBackref = (className && typeof className === 'string' && className.includes('data-footnote-backref')) || props['data-footnote-backref'];
+                const isRef = (className && typeof className === 'string' && className.includes('data-footnote-ref')) || props['data-footnote-ref'];
+
+                if (isBackref) {
+                  // Omit children entirely to remove the emoji
+                  return <a {...props} className="footnote-backref" />;
+                }
+                if (isRef) {
+                  return <a style={{ color: '#3182ce', textDecoration: 'none', fontWeight: 600 }} className={className} {...props}>{children}</a>;
+                }
+                return <a style={{ color: '#3182ce', textDecoration: 'underline' }} className={className} {...props}>{children}</a>;
+              },
+              ul: ({node, ...props}) => <ul style={{ paddingLeft: '1.5rem', marginBottom: '1rem', listStyleType: 'disc' }} {...props} />,
+              ol: ({node, ...props}) => <ol style={{ paddingLeft: '1.5rem', marginBottom: '1rem', listStyleType: 'decimal' }} {...props} />,
+              li: ({node, ...props}) => <li style={{ marginBottom: '0.5rem' }} {...props} />,
+              h1: ({node, ...props}) => <h1 style={{ fontSize: '2rem', fontWeight: 700, marginTop: '2rem', marginBottom: '1rem' }} {...props} />,
+              h2: ({node, ...props}) => {
+                if (props.id === 'footnote-label') {
+                  return <h2 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#718096', marginBottom: '1rem' }} {...props} />;
+                }
+                return <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginTop: '1.5rem', marginBottom: '1rem' }} {...props} />;
+              },
+              h3: ({node, ...props}) => <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginTop: '1.25rem', marginBottom: '0.75rem' }} {...props} />,
+              blockquote: ({node, ...props}) => <blockquote style={{ borderLeft: '4px solid #e2e8f0', paddingLeft: '1rem', color: '#4a5568', margin: '1rem 0' }} {...props} />,
+              section: ({node, ...props}) => {
+                if (props['data-footnotes']) {
+                  return <section style={{ marginTop: '5rem', paddingTop: '2rem', borderTop: '1px solid #e2e8f0' }} {...props} />;
+                }
+                return <section {...props} />;
+              }
+            }}
+          >
+            {content}
+          </ReactMarkdown>
         </div>
       </div>
     </>
