@@ -109,13 +109,13 @@ export default function WritingYearClient({ year, posts, startDate }: WritingYea
   return (
     <>
       <style dangerouslySetInnerHTML={{
-        __html: \`
+        __html: `
           @media (prefers-color-scheme: dark) {
             [data-theme="dark"] daily-list .dark-date {
               color: var(--chakra-colors-gray-300) !important;
             }
           }
-        \`
+        `
       }} />
       <script dangerouslySetInnerHTML={{ __html: scriptContent }} suppressHydrationWarning />
       {/* @ts-expect-error - Custom Web Component */}
