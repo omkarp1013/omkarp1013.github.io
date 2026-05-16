@@ -1,8 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
-import { Text, VStack, Box } from '@chakra-ui/react';
-import Link from 'next/link';
+import React from 'react';
 
 interface Post {
   slug: string;
@@ -17,165 +15,116 @@ interface WritingYearClientProps {
   startDate: string;
 }
 
-/**
- * Computes the current date in EST/EDT (America/New_York) using the browser's
- * built-in Intl support.  This runs on the client, so "today" updates at
- * midnight Eastern time regardless of when GitHub Actions last built the site.
- */
-function getTodayEST(): string {
-  const now = new Date();
-  // toLocaleDateString with timeZone gives the date in that zone
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'America/New_York',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).formatToParts(now);
-
-  const y = parts.find(p => p.type === 'year')!.value;
-  const m = parts.find(p => p.type === 'month')!.value;
-  const d = parts.find(p => p.type === 'day')!.value;
-  return `${y}-${m}-${d}`;
-}
-
-/**
- * Generate all dates between two YYYY-MM-DD strings (inclusive).
- */
-function dateRange(from: string, to: string): string[] {
-  const dates: string[] = [];
-  const cur = new Date(from + 'T00:00:00');
-  const end = new Date(to + 'T00:00:00');
-  while (cur <= end) {
-    const yy = cur.getFullYear();
-    const mm = String(cur.getMonth() + 1).padStart(2, '0');
-    const dd = String(cur.getDate()).padStart(2, '0');
-    dates.push(`${yy}-${mm}-${dd}`);
-    cur.setDate(cur.getDate() + 1);
-  }
-  return dates;
-}
-
 export default function WritingYearClient({ year, posts, startDate }: WritingYearClientProps) {
-  // Initialize directly so the very first client render already includes today's
-  // missing-day entries, avoiding a visible flash when useEffect would set state
-  // on the next tick.
-  const clientToday = getTodayEST();
+  // We serialize the posts into a dictionary map for the client script
+  const postsDictStr = JSON.stringify(
+    posts.reduce((acc, p) => {
+      acc[p.slug] = { title: p.title, url: `/writing/${p.year}/${p.slug}` };
+      return acc;
+    }, {} as Record<string, any>)
+  );
 
-  const displayItems = useMemo(() => {
-    const postSlugs = new Set(posts.map(p => p.slug));
+  const scriptContent = `
+    if (typeof window !== 'undefined' && !window.customElements.get('daily-list')) {
+      class DailyList extends HTMLElement {
+        connectedCallback() {
+          const posts = JSON.parse(this.getAttribute('data-posts') || '{}');
+          const year = this.getAttribute('data-year');
+          const startDateStr = this.getAttribute('data-start');
 
-    // Determine the range of dates to check for this year
-    const yearStart = `${year}-01-01`;
-    const rangeFrom = startDate > yearStart ? startDate : yearStart;
-    const yearEnd = `${year}-12-31`;
+          // Get exact current date in EST
+          const now = new Date();
+          const parts = new Intl.DateTimeFormat('en-US', {
+            timeZone: 'America/New_York',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          }).formatToParts(now);
+          const yy = parts.find(p => p.type === 'year').value;
+          const mm = parts.find(p => p.type === 'month').value;
+          const dd = parts.find(p => p.type === 'day').value;
+          const todayKey = yy + "-" + mm + "-" + dd;
 
-    // Only add missing-day markers if the range makes sense
-    const items: any[] = posts.map(p => ({ ...p, type: 'post' }));
+          const yearStart = year + "-01-01";
+          const rangeFrom = startDateStr > yearStart ? startDateStr : yearStart;
+          const yearEnd = year + "-12-31";
+          const rangeTo = todayKey < yearEnd ? todayKey : yearEnd;
 
-    const todayStr = clientToday;
-
-    if (rangeFrom <= yearEnd) {
-      const rangeTo = todayStr < yearEnd ? todayStr : yearEnd;
-
-      if (rangeFrom <= rangeTo) {
-        const allDates = dateRange(rangeFrom, rangeTo);
-        let missingStart: string | null = null;
-        let missingEnd: string | null = null;
-
-        const pushMissing = () => {
-          if (!missingStart || !missingEnd) return;
-          if (missingStart === missingEnd) {
-            items.push({
-              slug: missingStart,
-              year: missingStart.split('-')[0],
-              title: 'I did not write anything today.',
-              date: missingStart,
-              type: 'missing',
-            });
-          } else {
-            items.push({
-              slug: `${missingStart}-to-${missingEnd}`,
-              year: missingStart.split('-')[0],
-              date: missingEnd,
-              startDate: missingStart,
-              endDate: missingEnd,
-              type: 'missing_range',
-            });
-          }
-          missingStart = null;
-          missingEnd = null;
-        };
-
-        for (const d of allDates) {
-          if (!postSlugs.has(d)) {
-            if (!missingStart) {
-              missingStart = d;
+          const days = [];
+          if (rangeFrom <= rangeTo) {
+            const cur = new Date(rangeFrom + "T00:00:00");
+            const end = new Date(rangeTo + "T00:00:00");
+            while (cur <= end) {
+              const y = cur.getFullYear();
+              const m = String(cur.getMonth() + 1).padStart(2, "0");
+              const d = String(cur.getDate()).padStart(2, "0");
+              days.push(y + "-" + m + "-" + d);
+              cur.setDate(cur.getDate() + 1);
             }
-            missingEnd = d;
-          } else {
-            pushMissing();
           }
-        }
-        pushMissing();
-      }
-    }
+          days.reverse();
 
-    // Sort descending by date
-    items.sort((a, b) => b.date.localeCompare(a.date));
-    return items;
-  }, [year, posts, startDate, clientToday]);
+          function fmt(key) {
+            const p = key.split("-");
+            return "[" + p[1] + "/" + p[2] + "/" + p[0] + "]";
+          }
+
+          let html = '<div style="display: flex; flex-direction: column; gap: 0.75rem;">';
+          let i = 0;
+          while (i < days.length) {
+            const key = days[i];
+            if (posts[key] && key <= todayKey) {
+              html += '<div style="font-size: var(--chakra-fontSizes-md); display: flex; gap: 0.5rem;">' +
+                      '<span style="color: var(--chakra-colors-gray-900);" class="dark-date">' + fmt(key) + '</span>' +
+                      ' <a href="' + posts[key].url + '" class="post-link" style="text-decoration: underline;">' + posts[key].title + '</a>' +
+                      '</div>';
+              i++;
+            } else {
+              let j = i;
+              while (j < days.length && !(posts[days[j]] && days[j] <= todayKey)) {
+                j++;
+              }
+              const runStart = days[i];
+              const runEnd = days[j - 1];
+              let text = "";
+              if (runStart === runEnd) {
+                text = fmt(runStart) + " I did not write anything today.";
+              } else {
+                const startP = runStart.split("-");
+                const endP = runEnd.split("-");
+                text = "[" + endP[1] + "/" + endP[2] + "/" + endP[0] + " – " + startP[1] + "/" + startP[2] + "/" + startP[0] + "] I did not write anything on these days";
+              }
+              html += '<p style="color: var(--chakra-colors-gray-400); font-size: var(--chakra-fontSizes-md); margin: 0;">' + text + '</p>';
+              i = j;
+            }
+          }
+          html += '</div>';
+          this.innerHTML = html;
+        }
+      }
+      window.customElements.define('daily-list', DailyList);
+    }
+  `;
 
   return (
     <>
-      <VStack align="stretch" gap={3}>
-        {displayItems.map((item) => {
-          if (item.type === 'missing_range') {
-            const startParts = item.startDate.split('-');
-            const endParts = item.endDate.split('-');
-            const formattedDate = `[${startParts[1]}/${startParts[2]}/${startParts[0]} – ${endParts[1]}/${endParts[2]}/${endParts[0]}]`;
-
-            return (
-              <Text
-                key={item.slug}
-                color="gray.400"
-                fontSize="md"
-                suppressHydrationWarning
-              >
-                {formattedDate} I did not write anything on these days
-              </Text>
-            );
+      <style dangerouslySetInnerHTML={{
+        __html: \`
+          @media (prefers-color-scheme: dark) {
+            [data-theme="dark"] daily-list .dark-date {
+              color: var(--chakra-colors-gray-300) !important;
+            }
           }
-
-          const dateParts = item.date.split('-');
-          const formattedDate = `[${dateParts[1]}/${dateParts[2]}/${dateParts[0]}]`;
-
-          if (item.type === 'missing') {
-            return (
-              <Text
-                key={item.slug}
-                color="gray.400"
-                fontSize="md"
-                suppressHydrationWarning
-              >
-                {formattedDate} {item.title}
-              </Text>
-            );
-          }
-
-          return (
-            <Box key={item.slug} fontSize="md" display="flex" gap={2}>
-              <Text as="span" color="gray.900" _dark={{ color: "gray.300" }}>{formattedDate}</Text>
-              <Link
-                href={`/writing/${item.year}/${item.slug}`}
-                className="post-link"
-                style={{ textDecoration: 'underline' }}
-              >
-                {item.title}
-              </Link>
-            </Box>
-          );
-        })}
-      </VStack>
+        \`
+      }} />
+      <script dangerouslySetInnerHTML={{ __html: scriptContent }} suppressHydrationWarning />
+      {/* @ts-expect-error - Custom Web Component */}
+      <daily-list 
+        data-year={year} 
+        data-posts={postsDictStr} 
+        data-start={startDate} 
+        suppressHydrationWarning 
+      />
     </>
   );
 }
