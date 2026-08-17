@@ -5,6 +5,8 @@ import path from 'path';
 const BASE_URL = 'https://omkarp1013.github.io';
 const WRITING_DIR = path.join(process.cwd(), 'src/content/writing');
 
+export const dynamic = 'force-static';
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = ['', '/about', '/reading', '/writing'].map((route) => ({
     url: `${BASE_URL}${route}`,
