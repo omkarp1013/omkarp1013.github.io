@@ -4,8 +4,14 @@ import matter from 'gray-matter';
 import { Heading, Text, VStack, Box, Link as ChakraLink } from '@chakra-ui/react';
 import Link from 'next/link';
 import React from 'react';
+import type { Metadata } from 'next';
 
 const WRITING_DIR = path.join(process.cwd(), 'src/content/writing');
+
+export const metadata: Metadata = {
+  title: 'Writing · Omkar Pathak',
+  description: 'Daily writing and shorter thoughts from Omkar Pathak.',
+};
 
 export const revalidate = 3600; // Revalidate every hour to update dates at midnight
 

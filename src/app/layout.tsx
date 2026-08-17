@@ -11,6 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://omkarp1013.github.io"),
   title: "Omkar Pathak",
   description: "CS & Math @ UMD. Interested in financial markets, global macro trading, and building robust, high-performance infrastructure.",
   icons: {

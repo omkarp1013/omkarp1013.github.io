@@ -6,6 +6,7 @@ import Link from 'next/link';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import type { Metadata } from 'next';
 
 interface PostPageProps {
   params: Promise<{
@@ -15,6 +16,31 @@ interface PostPageProps {
 }
 
 export const dynamicParams = false;
+
+export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
+  const { year, slug } = await params;
+  const filePath = path.join(process.cwd(), 'src/content/writing', year, `${slug}.md`);
+
+  if (!fs.existsSync(filePath)) {
+    return { title: 'Post Not Found · Omkar Pathak' };
+  }
+
+  const fileContents = fs.readFileSync(filePath, 'utf8');
+  const { data } = matter(fileContents);
+  const title = data.title || slug;
+  const description = data.description || `Writing from ${slug} by Omkar Pathak.`;
+
+  return {
+    title: `${title} · Omkar Pathak`,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'article',
+      publishedTime: slug,
+    },
+  };
+}
 
 export async function generateStaticParams() {
   const WRITING_DIR = path.join(process.cwd(), 'src/content/writing');
@@ -176,7 +202,7 @@ export default async function PostPage({ params }: PostPageProps) {
               h1: ({ node, ...props }) => <h1 style={{ fontSize: '2rem', fontWeight: 700, marginTop: '2rem', marginBottom: '1rem' }} {...props} />,
               h2: ({ node, ...props }) => {
                 if (props.id === 'footnote-label') {
-                  return <h2 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#ffffff', marginBottom: '1rem' }} {...props} />;
+                  return <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem' }} {...props} />;
                 }
                 return <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginTop: '1.5rem', marginBottom: '1rem' }} {...props} />;
               },
@@ -209,8 +235,8 @@ export default async function PostPage({ params }: PostPageProps) {
               {prevPost && (
                 <Link
                   href={`/writing/${year}/${prevPost.slug}`}
+                  className="post-nav-link"
                   style={{
-                    color: '#ffffff',
                     textDecoration: 'underline',
                     fontSize: '0.95rem',
                   }}
@@ -223,8 +249,8 @@ export default async function PostPage({ params }: PostPageProps) {
               {nextPost && (
                 <Link
                   href={`/writing/${year}/${nextPost.slug}`}
+                  className="post-nav-link"
                   style={{
-                    color: '#ffffff',
                     textDecoration: 'underline',
                     fontSize: '0.95rem',
                   }}

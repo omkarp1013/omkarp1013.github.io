@@ -4,6 +4,7 @@ import matter from 'gray-matter';
 import { Heading, Text, VStack, Box } from '@chakra-ui/react';
 import Link from 'next/link';
 import React from 'react';
+import type { Metadata } from 'next';
 import WritingYearClient from '../../../components/WritingYearClient';
 
 const WRITING_DIR = path.join(process.cwd(), 'src/content/writing');
@@ -12,6 +13,14 @@ interface YearPageProps {
   params: Promise<{
     year: string;
   }>;
+}
+
+export async function generateMetadata({ params }: YearPageProps): Promise<Metadata> {
+  const { year } = await params;
+  return {
+    title: `Writing — ${year} · Omkar Pathak`,
+    description: `Daily writing and shorter thoughts from ${year}.`,
+  };
 }
 
 export async function generateStaticParams() {

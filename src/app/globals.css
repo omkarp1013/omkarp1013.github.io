@@ -26,3 +26,11 @@ body {
 .dark .post-body {
   color: #cbd5e0 !important;
 }
+
+.post-nav-link {
+  color: #1a202c;
+}
+
+.dark .post-nav-link {
+  color: #e2e8f0;
+}
